@@ -15,6 +15,7 @@ export const schoolRegistrationController = async (req, res) => {
       taluka,
       pinCode,
       schoolEmailId,
+      modeOfExam, // ✅ add this
     } = req.body;
 
     if (
@@ -28,14 +29,16 @@ export const schoolRegistrationController = async (req, res) => {
       !city ||
       !taluka ||
       !pinCode ||
-      !schoolEmailId
+      !schoolEmailId ||
+      !modeOfExam // ✅ validate this also
     ) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
     }
-    // 🔄 Duplicate email/mobile check (extra safety)
+
+    // 🔄 Duplicate email/mobile check
     const existingSchool = await schoolModel.findOne({
       $or: [{ mobileNo }, { schoolEmailId }],
     });
@@ -45,6 +48,7 @@ export const schoolRegistrationController = async (req, res) => {
         message: "School with same mobile or email already exists",
       });
     }
+
     // ✅ New School create
     const newSchool = await schoolModel.create({
       schoolName,
@@ -58,6 +62,7 @@ export const schoolRegistrationController = async (req, res) => {
       taluka,
       pinCode,
       schoolEmailId,
+      modeOfExam, // ✅ save in DB
     });
 
     return res.status(201).json({
@@ -66,7 +71,7 @@ export const schoolRegistrationController = async (req, res) => {
       school: newSchool,
     });
   } catch (error) {
-    console.error("❌ Error in addSchoolController:", error);
+    console.error("❌ Error in schoolRegistrationController:", error);
     return res.status(500).json({
       success: false,
       message: "Server error, please try again later",
@@ -74,6 +79,7 @@ export const schoolRegistrationController = async (req, res) => {
     });
   }
 };
+
 
 //SCHOOL LOGIN
 export const schoolLoginController = async (req, res) => {

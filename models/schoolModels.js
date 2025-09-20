@@ -69,6 +69,11 @@ const schoolSchema = new mongoose.Schema(
       trim: true, // ✅ important: email me accidental space remove karega
       match: [/\S+@\S+\.\S+/, "Invalid email address"],
     },
+    modeOfExam: {
+      type: String,
+      enum: ["ONLINE", "OFFLINE"],
+      default: "OFFLINE",
+    },
     otp: {
       type: String,
       default: null,
